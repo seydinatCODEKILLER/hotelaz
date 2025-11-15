@@ -19,7 +19,7 @@ export default function HeroSection() {
         transition={{ duration: 12, repeat: Infinity, repeatType: 'reverse' }}
       />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div className="relative w-full md:max-w-7xl mx-auto px-2 md:px-6 lg:px-8 text-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -54,7 +54,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-10 max-w-3xl mx-auto"
+            className="text-sm text-center md:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 mb-10  max-w-3xl mx-auto"
           >
             Une application moderne pour gérer vos hôtels, suivre vos performances et développer votre business en toute simplicité.
           </motion.p>
@@ -88,7 +88,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className="flex flex-wrap justify-center gap-8"
+            className="flex flex-wrap justify-center gap-4 md:gap-8"
           >
             {[
               { icon: Shield, text: 'Sécurisé & fiable' },

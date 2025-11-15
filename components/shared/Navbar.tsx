@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, Home, Briefcase, Tag, Star, ArrowUpRight } from 'lucide-react'
+import { X, Home, Briefcase, Tag, Star, ArrowUpRight, Grid, Grid2X2Check, MenuSquare, Grid2X2PlusIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ModeToggle } from '../theme/ModeToggle'
 
@@ -36,7 +36,7 @@ export default function Navbar() {
           </motion.div>
 
           {/* Liens centrés */}
-          <div className="hidden md:flex items-center gap-2">
+          <div className="hidden lg:flex items-center gap-2">
             {links.map((link) => (
               <motion.a
                 key={link.name}
@@ -51,10 +51,10 @@ export default function Navbar() {
           </div>
 
           {/* CTA + ToggleTheme */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-3">
             <ModeToggle /> {/* 👈 bouton de changement de thème */}
             <Button
-              onClick={() => router.push('/login')}
+              onClick={() => router.push('/auth/login')}
               className="flex items-center gap-2 rounded-full bg-gradient-to-r from-indigo-500 to-blue-500 text-white px-5 py-2 font-medium shadow-md hover:shadow-lg transition-all duration-200"
             >
               Se connecter
@@ -65,9 +65,9 @@ export default function Navbar() {
           {/* Menu mobile */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+            className="lg:hidden p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
           >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
+            {isOpen ? <X size={24} /> : <Grid2X2PlusIcon size={24} />}
           </button>
         </div>
 
@@ -78,7 +78,7 @@ export default function Navbar() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="md:hidden border-t border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md rounded-b-2xl"
+              className="lg:hidden border-t border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md rounded-b-2xl"
             >
               <div className="py-4 space-y-2">
                 {links.map((link) => (
@@ -96,7 +96,7 @@ export default function Navbar() {
                   <ModeToggle />
                   <Button
                     onClick={() => {
-                      router.push('/login')
+                      router.push('/auth/login')
                       setIsOpen(false)
                     }}
                     className="flex items-center gap-2 rounded-full bg-gradient-to-r from-indigo-500 to-blue-500 text-white px-5 py-2 font-medium shadow-md hover:shadow-lg transition-all duration-200"
