@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -25,6 +26,9 @@ export function HotelsCardView({
   isDeleting = false, 
   isRestoring = false 
 }: HotelsCardViewProps) {
+
+  const router = useRouter()
+
   const getStatusVariant = (statut: string, deleted_at?: string) => {
     if (deleted_at) return 'destructive'
     if (statut === 'actif') return 'default'
@@ -46,8 +50,10 @@ export function HotelsCardView({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: index * 0.1 }}
         >
-          <Card className="h-full hover:shadow-lg transition-shadow duration-300">
-            {/* Photo et statut */}
+          <Card
+            className="h-full hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+            onClick={() => router.push(`/dashboard/hotels/${hotel.id}`)}
+          >
             <CardHeader className="p-0 relative">
               {hotel.photo ? (
                 <img
@@ -60,7 +66,6 @@ export function HotelsCardView({
                   <Building className="w-16 h-16 text-white opacity-80" />
                 </div>
               )}
-              
               <Badge 
                 variant={getStatusVariant(hotel.statut, hotel.deleted_at)}
                 className="absolute top-3 right-3"
@@ -70,11 +75,9 @@ export function HotelsCardView({
             </CardHeader>
 
             <CardContent className="p-6">
-              {/* Nom et prix */}
               <div className="mb-4">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                  {hotel.nom}
-                </h3>
+                <h3 className="text-xl font-semibold mb-2">{hotel.nom}</h3>
+
                 <div className="flex items-center gap-2 text-lg font-bold text-blue-600">
                   <Euro className="w-4 h-4" />
                   {formatCurrency(hotel.prix_par_nuit, hotel.device)}
@@ -82,25 +85,25 @@ export function HotelsCardView({
                 </div>
               </div>
 
-              {/* Informations de contact */}
+              {/* Infos */}
               <div className="space-y-3 mb-6">
                 <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
                   <MapPin className="w-4 h-4 flex-shrink-0" />
                   <span className="truncate">{hotel.adresse}</span>
                 </div>
-                
+
                 <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
                   <Phone className="w-4 h-4 flex-shrink-0" />
                   <span>{hotel.telephone}</span>
                 </div>
-                
+
                 <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
                   <Mail className="w-4 h-4 flex-shrink-0" />
                   <span className="truncate">{hotel.mail}</span>
                 </div>
               </div>
 
-              {/* Actions */}
+              {/* Actions — empêchent le clic d'ouvrir la page */}
               <div className="flex gap-2">
                 {!hotel.deleted_at && hotel.statut === 'actif' ? (
                   <>
@@ -108,15 +111,22 @@ export function HotelsCardView({
                       variant="outline"
                       size="sm"
                       className="flex-1"
-                      onClick={() => onEdit(hotel)}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        onEdit(hotel)
+                      }}
                     >
                       <Edit className="w-4 h-4 mr-2" />
                       Modifier
                     </Button>
+
                     <Button
                       variant="destructive"
                       size="sm"
-                      onClick={() => onDelete(hotel)}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        onDelete(hotel)
+                      }}
                       disabled={isDeleting}
                     >
                       <Trash2 className="w-4 h-4" />
@@ -127,7 +137,10 @@ export function HotelsCardView({
                     variant="outline"
                     size="sm"
                     className="flex-1"
-                    onClick={() => onRestore(hotel)}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      onRestore(hotel)
+                    }}
                     disabled={isRestoring}
                   >
                     <RotateCcw className="w-4 h-4 mr-2" />
