@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Hotel } from '@/types/hotel'
-import { Edit, Trash2, RotateCcw, Building, MapPin, Phone, Mail, Euro } from 'lucide-react'
+import { Edit, Trash2, RotateCcw, Building, MapPin, Phone, Mail, Euro,Wifi, Car, Utensils } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
 
 interface HotelsCardViewProps {
@@ -39,6 +39,25 @@ export function HotelsCardView({
     if (deleted_at) return 'Supprimé'
     if (statut === 'actif') return 'Actif'
     return 'Inactif'
+  }
+
+  const renderAmenities = () => {
+    const amenities = [
+      { icon: Wifi, label: 'WiFi' },
+      { icon: Car, label: 'Parking' },
+      { icon: Utensils, label: 'Restaurant' }
+    ]
+
+    return (
+      <div className="flex gap-2 mt-3">
+        {amenities.map((amenity, index) => (
+          <Badge key={index} variant="outline" className="px-2 py-1 text-xs">
+            <amenity.icon className="w-3 h-3 mr-1" />
+            {amenity.label}
+          </Badge>
+        ))}
+      </div>
+    )
   }
 
   return (
@@ -74,36 +93,56 @@ export function HotelsCardView({
               </Badge>
             </CardHeader>
 
-            <CardContent className="p-6">
-              <div className="mb-4">
-                <h3 className="text-xl font-semibold mb-2">{hotel.nom}</h3>
-
-                <div className="flex items-center gap-2 text-lg font-bold text-blue-600">
-                  <Euro className="w-4 h-4" />
-                  {formatCurrency(hotel.prix_par_nuit, hotel.device)}
-                  <span className="text-sm text-gray-500 font-normal">/nuit</span>
+            <CardContent className="p-3 relative z-20 bg-transparent">
+              {/* En-tête avec prix */}
+              <div className="mb-6">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-2">
+                  <Badge>
+                    {hotel.nom}
+                  </Badge>
+                  
+                  <Badge variant="secondary">
+                    <Euro className="w-4 h-4" />
+                    {formatCurrency(hotel.prix_par_nuit, hotel.device)}
+                  </Badge>
                 </div>
+                {renderAmenities()}
               </div>
 
-              {/* Infos */}
+              {/* Informations de contact */}
               <div className="space-y-3 mb-6">
-                <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
-                  <MapPin className="w-4 h-4 flex-shrink-0" />
-                  <span className="truncate">{hotel.adresse}</span>
-                </div>
+                <motion.div 
+                  className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300 group/item"
+                  whileHover={{ x: 5 }}
+                >
+                  <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                    <MapPin className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <span className="truncate font-medium">{hotel.adresse}</span>
+                </motion.div>
 
-                <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
-                  <Phone className="w-4 h-4 flex-shrink-0" />
-                  <span>{hotel.telephone}</span>
-                </div>
+                <motion.div 
+                  className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300 group/item"
+                  whileHover={{ x: 5 }}
+                >
+                  <div className="p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                    <Phone className="w-4 h-4 text-green-600 dark:text-green-400" />
+                  </div>
+                  <span className="font-medium">{hotel.telephone}</span>
+                </motion.div>
 
-                <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
-                  <Mail className="w-4 h-4 flex-shrink-0" />
-                  <span className="truncate">{hotel.mail}</span>
-                </div>
+                <motion.div 
+                  className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300 group/item"
+                  whileHover={{ x: 5 }}
+                >
+                  <div className="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                    <Mail className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                  </div>
+                  <span className="truncate font-medium">{hotel.mail}</span>
+                </motion.div>
               </div>
 
-              {/* Actions — empêchent le clic d'ouvrir la page */}
+              {/* Actions */}
               <div className="flex gap-2">
                 {!hotel.deleted_at && hotel.statut === 'actif' ? (
                   <>

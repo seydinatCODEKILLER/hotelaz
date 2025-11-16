@@ -109,3 +109,29 @@ export const useRestoreHotel = () => {
     },
   })
 }
+
+// Hook pour mettre à jour la photo
+export const useUpdateHotelPhoto = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation<
+    string, 
+    AxiosError<ApiError>, 
+    { id: string; photo: File }
+  >({
+    mutationFn: ({ id, photo }) => hotelsApi.updatePhoto(id, photo),
+    onSuccess: (photoUrl, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['hotels'] })
+      queryClient.invalidateQueries({ queryKey: ['hotel', variables.id] })
+      queryClient.setQueryData(['hotel', variables.id], (oldData: Hotel | undefined) => {
+        if (!oldData) return oldData
+        return { ...oldData, photo: photoUrl }
+      })
+      toast.success('Photo mise à jour avec succès')
+    },
+    onError: (error: AxiosError<ApiError>) => {
+      const errorMessage = error.response?.data?.message || 'Erreur lors de la mise à jour de la photo'
+      toast.error('Erreur', { description: errorMessage })
+    },
+  })
+}

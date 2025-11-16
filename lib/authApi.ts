@@ -39,4 +39,24 @@ export const authApi = {
     const response = await apiClient.get('/auth/user')
     return response.data
   },
+  
+  updateAvatar: async (avatar: File): Promise<{ success: boolean; message: string; avatar: string }> => {
+    const formData = new FormData()
+    formData.append('avatar', avatar)
+
+    const response = await apiClient.post<{ 
+      success: boolean; 
+      message: string; 
+      avatar: string 
+    }>(
+      '/auth/update-avatar',
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    )
+    return response.data
+  },
 }

@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/stores/useAuthStore'
 import { authApi } from '@/lib/authApi'
@@ -29,5 +29,16 @@ export const useLogin = () => {
         description: errorMessage,
       })
     },
+  })
+}
+
+
+// Hook pour récupérer l'utilisateur connecté
+export const useCurrentUser = () => {
+  return useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => authApi.getCurrentUser(),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    retry: 1,
   })
 }

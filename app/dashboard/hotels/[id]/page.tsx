@@ -5,14 +5,17 @@ import { useParams, useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Building, MapPin, Phone, Mail, Euro, Calendar, Edit, ArrowLeft } from 'lucide-react'
+import { Building, MapPin, Phone, Mail, Euro, Calendar, Edit, ArrowLeft, Camera } from 'lucide-react'
 import { useHotel } from '@/hooks/hotels/useHotels'
 import { formatCurrency, formatDateTime } from '@/lib/utils'
+import { useState } from 'react'
+import { UpdatePhotoModal } from '@/components/hotels/UpdatePhotoModal'
 
 export default function HotelDetailsPage() {
   const params = useParams()
   const router = useRouter()
   const hotelId = params.id as string
+  const [updatePhotoModalOpen, setUpdatePhotoModalOpen] = useState(false)
 
   const { data: hotel, isLoading } = useHotel(hotelId)
 
@@ -92,10 +95,15 @@ export default function HotelDetailsPage() {
         </div>
 
         {!hotel.deleted_at && hotel.statut === 'actif' && (
-          <Button>
-            <Edit className="w-4 h-4 mr-2" />
-            Modifier
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setUpdatePhotoModalOpen(true)}
+            >
+              <Camera className="w-4 h-4 mr-2" />
+              Modifier la photo
+            </Button>
+          </div>
         )}
       </motion.div>
 
@@ -108,19 +116,53 @@ export default function HotelDetailsPage() {
           className="lg:col-span-2 space-y-6"
         >
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Photo</CardTitle>
+              {!hotel.deleted_at && hotel.statut === 'actif' && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setUpdatePhotoModalOpen(true)}
+                >
+                  <Camera className="w-4 h-4 mr-2" />
+                  Modifier
+                </Button>
+              )}
             </CardHeader>
             <CardContent>
               {hotel.photo ? (
-                <img
-                  src={hotel.photo}
-                  alt={hotel.nom}
-                  className="w-full h-80 object-cover rounded-lg"
-                />
+                <div className="relative group">
+                  <img
+                    src={hotel.photo}
+                    alt={hotel.nom}
+                    className="w-full h-80 object-cover rounded-lg"
+                  />
+                  {!hotel.deleted_at && hotel.statut === 'actif' && (
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg flex items-center justify-center">
+                      <Button
+                        variant="secondary"
+                        onClick={() => setUpdatePhotoModalOpen(true)}
+                      >
+                        <Camera className="w-4 h-4 mr-2" />
+                        Modifier la photo
+                      </Button>
+                    </div>
+                  )}
+                </div>
               ) : (
-                <div className="w-full h-80 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+                <div className="w-full h-80 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center relative group">
                   <Building className="w-20 h-20 text-white opacity-80" />
+                  {!hotel.deleted_at && hotel.statut === 'actif' && (
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg flex items-center justify-center">
+                      <Button
+                        variant="secondary"
+                        onClick={() => setUpdatePhotoModalOpen(true)}
+                      >
+                        <Camera className="w-4 h-4 mr-2" />
+                        Ajouter une photo
+                      </Button>
+                    </div>
+                  )}
                 </div>
               )}
             </CardContent>
@@ -232,6 +274,14 @@ export default function HotelDetailsPage() {
           </Card>
         </motion.div>
       </div>
+
+      {/* Modal de mise à jour de photo */}
+      <UpdatePhotoModal
+        open={updatePhotoModalOpen}
+        onOpenChange={setUpdatePhotoModalOpen}
+        hotelId={hotelId}
+        currentPhoto={hotel.photo}
+      />
     </div>
   )
 }
